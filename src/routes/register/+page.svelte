@@ -35,7 +35,7 @@
       bind:value={country}
       label="Countriy"
     />
-    <Button type="submit" variant="unelevated" disabled={loading}>
+    <Button type="submit" variant="unelevated" disabled={loading || !country}>
       <!-- <Icon class="material-icons">check</Icon> -->
       {#if loading}
         <CircularProgress style="height: 1.5em; width: 1.5em;" indeterminate />
@@ -44,9 +44,7 @@
       {/if}
     </Button>
   </form>
-  <p>
-    <a href="/">See the map</a>
-  </p>
+  <a href="/">See the map</a>
 </div>
 
 <style>
@@ -61,6 +59,7 @@
     display: flex;
     gap: 1em;
     align-items: center;
+    margin-bottom: 2.5em;
   }
 
   h2 {
