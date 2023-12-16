@@ -10,6 +10,8 @@
   let country: String | undefined
   let loading = false
 
+  // TODO: prevent double registration
+
   const createItem = async () => {
     if (!country) return
     loading = true

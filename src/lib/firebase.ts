@@ -1,9 +1,7 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { writable } from "svelte/store"
+import { getAuth, type User } from "firebase/auth"
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCv0JfyyMpxvlOCHhISeKIGoNcyx_ELqDg",
   authDomain: "global-friends-countries.firebaseapp.com",
@@ -15,3 +13,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 initializeApp(firebaseConfig)
+
+export const currentUser = writable<User | null>()
+
+const auth = getAuth()
+
+auth.onAuthStateChanged((user) => {
+  currentUser.set(user)
+})

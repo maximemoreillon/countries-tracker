@@ -14,6 +14,7 @@
     type Unsubscribe,
   } from "firebase/firestore"
   import { onDestroy, onMount } from "svelte"
+  import { currentUser } from "$lib/firebase"
 
   const earthRadius = 1.12
   const indicatorRadius = 0.015
@@ -46,6 +47,7 @@
     const q = query(collectionRef)
 
     unsub = onSnapshot(q, ({ docs }: any) => {
+      if (!$currentUser) return
       registeredCountries = docs.reduce((prev: any[], doc: any) => {
         const entry = doc.data()
 
@@ -70,19 +72,22 @@
   })
 
   onMount(() => {
-    subscribeToData()
-    if (queryCountry) {
-      const properties = allCountries.find((a) => a.Country === queryCountry)
-      if (properties) {
-        cameraPosition = spherical2cartesian(
-          deg2Rag(properties.Latitude),
-          -deg2Rag(properties.Longitude),
-          10
-        )
+    currentUser.subscribe((user) => {
+      if (!user) return
+      subscribeToData()
+      if (queryCountry) {
+        const properties = allCountries.find((a) => a.Country === queryCountry)
+        if (properties) {
+          cameraPosition = spherical2cartesian(
+            deg2Rag(properties.Latitude),
+            -deg2Rag(properties.Longitude),
+            10
+          )
 
-        autoRotate = false
+          autoRotate = false
+        }
       }
-    }
+    })
   })
 </script>
 
