@@ -1,6 +1,6 @@
 <script lang="ts">
   import Autocomplete from "@smui-extra/autocomplete"
-  import IconButton from "@smui/icon-button"
+  import Button, { Label, Icon } from "@smui/button"
   import countries from "$lib/countries"
   import { collection, addDoc, getFirestore } from "firebase/firestore"
   import { goto } from "$app/navigation"
@@ -22,9 +22,13 @@
 </script>
 
 <div class="wrapper">
+  <h2>Where are you from?</h2>
   <form on:submit|preventDefault={createItem}>
     <Autocomplete options={countryNames} bind:value label="Countriy" />
-    <IconButton class="material-icons" type="submit">check</IconButton>
+    <Button type="submit" variant="unelevated">
+      <Icon class="material-icons">check</Icon>
+      <Label>Register</Label>
+    </Button>
   </form>
 </div>
 
@@ -32,7 +36,14 @@
   .wrapper {
     margin-top: 40vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+  }
+
+  form {
+    display: flex;
+    gap: 1em;
     align-items: center;
   }
 </style>
