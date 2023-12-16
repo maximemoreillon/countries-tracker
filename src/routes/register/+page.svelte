@@ -4,19 +4,25 @@
   import countries from "$lib/countries"
   import { collection, addDoc, getFirestore } from "firebase/firestore"
   import { goto } from "$app/navigation"
+  import CircularProgress from "@smui/circular-progress"
 
   const countryNames = countries.map((c) => c.Country)
-  let value: String | undefined
+  let country: String | undefined
+  let loading = false
 
   const createItem = async () => {
-    if (!value) return
+    if (!country) return
+    loading = true
     try {
       const firestore = getFirestore()
       const collectionRef = collection(firestore, "entries")
-      await addDoc(collectionRef, { country: value })
-      goto("/")
+      await addDoc(collectionRef, { country })
+      goto(`/?country=${country}`)
     } catch (error) {
       console.error(error)
+      alert(error)
+    } finally {
+      loading = false
     }
   }
 </script>
@@ -24,12 +30,23 @@
 <div class="wrapper">
   <h2>Where are you from?</h2>
   <form on:submit|preventDefault={createItem}>
-    <Autocomplete options={countryNames} bind:value label="Countriy" />
-    <Button type="submit" variant="unelevated">
+    <Autocomplete
+      options={countryNames}
+      bind:value={country}
+      label="Countriy"
+    />
+    <Button type="submit" variant="unelevated" disabled={loading}>
       <!-- <Icon class="material-icons">check</Icon> -->
-      <Label>OK</Label>
+      {#if loading}
+        <CircularProgress style="height: 1.5em; width: 1.5em;" indeterminate />
+      {:else}
+        <Label>OK</Label>
+      {/if}
     </Button>
   </form>
+  <p>
+    <a href="/">See the map</a>
+  </p>
 </div>
 
 <style>

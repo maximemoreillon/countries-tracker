@@ -4,6 +4,7 @@
   import { OrbitControls } from "@threlte/extras"
   import Earth from "./models/earth.svelte"
   import allCountries from "$lib/countries"
+  import { page } from "$app/stores"
   import {
     collection,
     getFirestore,
@@ -14,20 +15,23 @@
   } from "firebase/firestore"
   import { onDestroy, onMount } from "svelte"
 
+  const earthRadius = 1.12
+  const indicatorRadius = 0.015
   const deg2Rag = (x: number) => (Math.PI * x) / 180.0
-
-  const latLon2xyz = (lat: number, lon: number) => {
-    const earthRadius = 1.12
-    return [
-      earthRadius * Math.cos(-deg2Rag(lon)) * Math.cos(deg2Rag(lat)),
-      earthRadius * Math.sin(deg2Rag(lat)),
-      earthRadius * Math.sin(-deg2Rag(lon)) * Math.cos(deg2Rag(lat)),
-    ]
-  }
+  const spherical2cartesian = (lat: number, lon: number, radius: number) => [
+    radius * Math.cos(lon) * Math.cos(lat),
+    radius * Math.sin(lat),
+    radius * Math.sin(lon) * Math.cos(lat),
+  ]
+  const getIndicatorSize = (count: number) => 0.02 * count
 
   let unsub: Unsubscribe
   const firestore = getFirestore()
   let registeredCountries: any[] = []
+  let cameraPosition = [10, 0, 0]
+  let autoRotate = true
+
+  const queryCountry = $page.url.searchParams.get("country")
 
   const subscribeToData = () => {
     if (unsub) unsub()
@@ -40,17 +44,15 @@
       registeredCountries = docs.reduce((prev: any[], doc: any) => {
         const entry = doc.data()
 
-        const foundExistingCountry = prev.find(
-          (p) => p.Country === entry.country
-        )
+        const found = prev.find((p) => p.Country === entry.country)
 
-        if (!foundExistingCountry) {
-          const countryProperties = allCountries.find(
+        if (!found) {
+          const properties = allCountries.find(
             (a) => a.Country === entry.country
           )
-          prev.push({ ...countryProperties, count: 1 })
+          prev.push({ ...properties, count: 1 })
         } else {
-          foundExistingCountry.count++
+          found.count++
         }
 
         return prev
@@ -62,13 +64,28 @@
     if (unsub) unsub()
   })
 
-  onMount(() => subscribeToData())
+  onMount(() => {
+    subscribeToData()
+    if (queryCountry) {
+      const properties = allCountries.find((a) => a.Country === queryCountry)
+      if (properties) {
+        cameraPosition = spherical2cartesian(
+          deg2Rag(properties.Latitude),
+          -deg2Rag(properties.Longitude),
+          10
+        )
+
+        autoRotate = false
+      }
+    }
+  })
 </script>
 
 <Canvas>
-  <T.PerspectiveCamera makeDefault position={[10, 0, 0]} fov={15}>
+  <!-- TODO: use query parameters to show a country -->
+  <T.PerspectiveCamera makeDefault position={cameraPosition} fov={15}>
     <OrbitControls
-      autoRotate
+      {autoRotate}
       enableZoom={true}
       enableDamping
       autoRotateSpeed={0.5}
@@ -81,11 +98,22 @@
 
   {#each registeredCountries as country}
     <T.Mesh
-      position={latLon2xyz(country.Latitude, country.Longitude)}
+      position={spherical2cartesian(
+        deg2Rag(country.Latitude),
+        -deg2Rag(country.Longitude),
+        earthRadius + 0.5 * getIndicatorSize(country.count)
+      )}
       rotation={[0, deg2Rag(country.Longitude), deg2Rag(90 + country.Latitude)]}
     >
       <!-- R, R, H, Sides -->
-      <T.CylinderGeometry args={[0.02, 0.02, 0.02 * country.count, 32]} />
+      <T.CylinderGeometry
+        args={[
+          indicatorRadius,
+          indicatorRadius,
+          getIndicatorSize(country.count),
+          32,
+        ]}
+      />
       <T.MeshStandardMaterial color="#F85122" />
     </T.Mesh>
   {/each}
