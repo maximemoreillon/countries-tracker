@@ -23,15 +23,20 @@
     radius * Math.sin(lat),
     radius * Math.sin(lon) * Math.cos(lat),
   ]
-  const getIndicatorSize = (count: number) => 0.02 * count
 
   let unsub: Unsubscribe
   const firestore = getFirestore()
   let registeredCountries: any[] = []
   let cameraPosition = [10, 0, 0]
   let autoRotate = true
-
   const queryCountry = $page.url.searchParams.get("country")
+
+  $: maxCount = registeredCountries.reduce(
+    (prev, { count }) => (count > prev ? count : prev),
+    0
+  )
+
+  const getIndicatorSize = (count: number) => 0.01 * count
 
   const subscribeToData = () => {
     if (unsub) unsub()
