@@ -7,9 +7,18 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "prepare": "npm run smui-theme-light && npm run smui-theme-dark",
+    "smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
+    "smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark"
   },
   "devDependencies": {
+    "@smui-extra/autocomplete": "^7.0.0-beta.15",
+    "@smui/button": "^7.0.0-beta.15",
+    "@smui/fab": "^7.0.0-beta.15",
+    "@smui/icon-button": "^7.0.0-beta.15",
+    "@smui/select": "^7.0.0-beta.15",
+    "@smui/textfield": "^7.0.0-beta.15",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/adapter-static": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
@@ -17,6 +26,7 @@
     "@threlte/core": "^7.0.12",
     "@threlte/extras": "^8.0.10",
     "@types/three": "^0.159.0",
+    "smui-theme": "^7.0.0-beta.15",
     "svelte": "^4.2.7",
     "svelte-check": "^3.6.0",
     "three": "^0.159.0",
