@@ -26,15 +26,14 @@
   <form on:submit|preventDefault={createItem}>
     <Autocomplete options={countryNames} bind:value label="Countriy" />
     <Button type="submit" variant="unelevated">
-      <Icon class="material-icons">check</Icon>
-      <Label>Register</Label>
+      <!-- <Icon class="material-icons">check</Icon> -->
+      <Label>OK</Label>
     </Button>
   </form>
 </div>
 
 <style>
   .wrapper {
-    margin-top: 20vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
