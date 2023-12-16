@@ -34,7 +34,7 @@
 
 <style>
   .wrapper {
-    margin-top: 40vh;
+    margin-top: 20vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -45,5 +45,9 @@
     display: flex;
     gap: 1em;
     align-items: center;
+  }
+
+  h2 {
+    font-size: 200%;
   }
 </style>
