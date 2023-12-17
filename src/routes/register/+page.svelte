@@ -32,11 +32,7 @@
 <div class="wrapper">
   <h2>Where are you from?</h2>
   <form on:submit|preventDefault={createItem}>
-    <Autocomplete
-      options={countryNames}
-      bind:value={country}
-      label="Countriy"
-    />
+    <Autocomplete options={countryNames} bind:value={country} label="Country" />
     <Button type="submit" variant="unelevated" disabled={loading || !country}>
       <!-- <Icon class="material-icons">check</Icon> -->
       {#if loading}
