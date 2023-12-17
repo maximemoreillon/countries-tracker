@@ -16,6 +16,7 @@
     "@smui-extra/autocomplete": "^7.0.0-beta.15",
     "@smui/button": "^7.0.0-beta.15",
     "@smui/circular-progress": "^7.0.0-beta.15",
+    "@smui/dialog": "^7.0.0-beta.15",
     "@smui/fab": "^7.0.0-beta.15",
     "@smui/icon-button": "^7.0.0-beta.15",
     "@smui/select": "^7.0.0-beta.15",

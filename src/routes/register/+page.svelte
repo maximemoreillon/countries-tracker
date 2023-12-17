@@ -1,10 +1,10 @@
 <script lang="ts">
   import Autocomplete from "@smui-extra/autocomplete"
   import Button, { Label, Icon } from "@smui/button"
+  import CircularProgress from "@smui/circular-progress"
   import countries from "$lib/countries"
   import { collection, addDoc, getFirestore } from "firebase/firestore"
   import { goto } from "$app/navigation"
-  import CircularProgress from "@smui/circular-progress"
 
   const countryNames = countries.map((c) => c.Country)
   let country: String | undefined
