@@ -1,7 +1,8 @@
 <script lang="ts">
   import Fab, { Icon } from "@smui/fab"
-  import Dialog, { Content } from "@smui/dialog"
+  import Dialog, { Content, Actions } from "@smui/dialog"
   import CircularProgress from "@smui/circular-progress"
+  import Button, { Label } from "@smui/button"
 
   import { goto } from "$app/navigation"
   import { Canvas } from "@threlte/core"
@@ -68,7 +69,7 @@
         }
         return prev
       }, [])
-      loading = false
+      // loading = false
     })
   }
 
@@ -101,7 +102,6 @@
 
 <div>
   <Canvas>
-    <!-- TODO: use query parameters to show a country -->
     <T.PerspectiveCamera makeDefault position={cameraPosition} fov={15}>
       <OrbitControls
         {autoRotate}
@@ -155,9 +155,11 @@
     <Icon class="material-icons">add</Icon>
   </Fab>
   <Dialog bind:open={loading} scrimClickAction="" escapeKeyAction="">
-    <Content style="text-align: center;">
-      <CircularProgress style="height: 3em; width: 3em;" indeterminate />
+    <Content style="display: flex; justify-content: center; padding: 2em;">
+      <CircularProgress style="height: 3em; width: 3em; " indeterminate />
     </Content>
+    <!-- Dummy button to deal with focusTrap errors -->
+    <button style="opacity: 0; position: absolute" />
   </Dialog>
 </div>
 
@@ -175,7 +177,7 @@
 
   :global(.register_button) {
     position: fixed;
-    top: 1em;
-    right: 1em;
+    top: 2em;
+    right: 2em;
   }
 </style>
