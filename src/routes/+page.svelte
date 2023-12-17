@@ -33,7 +33,8 @@
   let unsub: Unsubscribe
   const firestore = getFirestore()
   let registeredCountries: any[] = []
-  let cameraPosition = [10, 0, 0]
+  const originalCameraDistance = 15
+  let cameraPosition = [originalCameraDistance, 0, 0]
   let autoRotate = true
   const queryCountry = $page.url.searchParams.get("country")
 
@@ -86,7 +87,7 @@
           cameraPosition = spherical2cartesian(
             deg2Rag(properties.Latitude),
             -deg2Rag(properties.Longitude),
-            10
+            originalCameraDistance
           )
 
           autoRotate = false
