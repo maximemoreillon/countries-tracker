@@ -69,7 +69,7 @@
         }
         return prev
       }, [])
-      // loading = false
+      loading = false
     })
   }
 
