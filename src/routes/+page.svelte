@@ -20,23 +20,24 @@
   import { onDestroy, onMount } from "svelte"
   import { currentUser } from "$lib/firebase"
 
-  let loading = true
   const earthRadius = 1.12
   const indicatorRadius = 0.015
+  const originalCameraDistance = 15
+
+  let unsub: Unsubscribe
+  let registeredCountries: any[] = []
+  let cameraPosition = [originalCameraDistance, 0, 0]
+  let loading = true
+  let autoRotate = true
+
+  const firestore = getFirestore()
+
   const deg2Rag = (x: number) => (Math.PI * x) / 180.0
   const spherical2cartesian = (lat: number, lon: number, radius: number) => [
     radius * Math.cos(lon) * Math.cos(lat),
     radius * Math.sin(lat),
     radius * Math.sin(lon) * Math.cos(lat),
   ]
-
-  let unsub: Unsubscribe
-  const firestore = getFirestore()
-  let registeredCountries: any[] = []
-  const originalCameraDistance = 15
-  let cameraPosition = [originalCameraDistance, 0, 0]
-  let autoRotate = true
-  const queryCountry = $page.url.searchParams.get("country")
 
   $: maxCount = registeredCountries.reduce(
     (prev, { count }) => (count > prev ? count : prev),
@@ -47,16 +48,14 @@
 
   const subscribeToData = () => {
     if (unsub) unsub()
+    if (!$currentUser) return
 
     const collectionRef = collection(firestore, "entries")
-
     const q = query(collectionRef)
 
     unsub = onSnapshot(q, ({ docs }: any) => {
-      if (!$currentUser) return
       registeredCountries = docs.reduce((prev: any[], doc: any) => {
         const entry = doc.data()
-
         const found = prev.find((p) => p.Country === entry.country)
 
         if (!found) {
@@ -73,27 +72,30 @@
     })
   }
 
-  onDestroy(() => {
-    if (unsub) unsub()
-  })
+  const pointCameraToCountry = (countryName: string) => {
+    const properties = allCountries.find((a) => a.Country === countryName)
+    if (!properties) return
+
+    cameraPosition = spherical2cartesian(
+      deg2Rag(properties.Latitude),
+      -deg2Rag(properties.Longitude),
+      originalCameraDistance
+    )
+
+    autoRotate = false
+  }
 
   onMount(() => {
     currentUser.subscribe((user) => {
       if (!user) return
       subscribeToData()
-      if (queryCountry) {
-        const properties = allCountries.find((a) => a.Country === queryCountry)
-        if (properties) {
-          cameraPosition = spherical2cartesian(
-            deg2Rag(properties.Latitude),
-            -deg2Rag(properties.Longitude),
-            originalCameraDistance
-          )
-
-          autoRotate = false
-        }
-      }
+      const queryCountry = $page.url.searchParams.get("country")
+      if (queryCountry) pointCameraToCountry(queryCountry)
     })
+  })
+
+  onDestroy(() => {
+    if (unsub) unsub()
   })
 </script>
 
@@ -115,6 +117,7 @@
     <T.AmbientLight intensity={1} />
 
     {#each registeredCountries as country}
+      <!-- TODO: this could be a component -->
       <T.Mesh
         position={spherical2cartesian(
           deg2Rag(country.Latitude),
@@ -140,8 +143,6 @@
       </T.Mesh>
     {/each}
 
-    <!-- Earth radius is 1.1 -->
-    <!-- Greenwitch is on x = 1 -->
     <Earth />
   </Canvas>
   <Fab
