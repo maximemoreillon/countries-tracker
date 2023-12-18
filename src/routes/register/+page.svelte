@@ -3,22 +3,28 @@
   import Button, { Label, Icon } from "@smui/button"
   import CircularProgress from "@smui/circular-progress"
   import countries from "$lib/countries"
-  import { collection, addDoc, getFirestore } from "firebase/firestore"
+  import { collection, setDoc, getFirestore, doc } from "firebase/firestore"
   import { goto } from "$app/navigation"
+  import { currentUser } from "$lib/firebase"
 
   const countryNames = countries.map((c) => c.Country)
   let country: String | undefined
   let loading = false
 
-  // TODO: prevent double registration
-
   const createItem = async () => {
     if (!country) return
+    if (!$currentUser) return
     loading = true
     try {
       const firestore = getFirestore()
-      const collectionRef = collection(firestore, "entries")
-      await addDoc(collectionRef, { country })
+
+      await setDoc(
+        doc(firestore, "entries", $currentUser.uid),
+        {
+          country,
+        },
+        { merge: true }
+      )
       goto(`/?country=${country}`)
     } catch (error) {
       console.error(error)
