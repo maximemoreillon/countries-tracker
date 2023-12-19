@@ -53,7 +53,7 @@
       32,
     ]}
   />
-  <T.MeshStandardMaterial color="#F85122" />
+  <T.MeshStandardMaterial color="#ff0000" />
 </T.Mesh>
 
 <T.Sprite
