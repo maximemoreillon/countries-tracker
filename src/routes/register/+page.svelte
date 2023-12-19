@@ -1,4 +1,7 @@
 <script lang="ts">
+  /*
+  NOTE: this is an independent page and not a dialog so as to be able to point user to registration via URL
+  */
   import Autocomplete from "@smui-extra/autocomplete"
   import Button, { Label, Icon } from "@smui/button"
   import CircularProgress from "@smui/circular-progress"
