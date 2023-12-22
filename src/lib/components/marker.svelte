@@ -29,7 +29,7 @@
   ctx.textAlign = "center"
   ctx.textBaseline = "middle"
   ctx.strokeStyle = "black"
-  ctx.lineWidth = 3
+  ctx.lineWidth = 2
   ctx.strokeText(text, x, y)
   ctx.fillStyle = "#ff0000"
   ctx.fillText(text, x, y)
