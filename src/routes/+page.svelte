@@ -106,7 +106,7 @@
     <T.DirectionalLight intensity={0.8} position.x={5} position.y={10} />
     <T.AmbientLight intensity={1} />
 
-    {#each registeredCountries as country}
+    {#each registeredCountries as country (country.Country)}
       <Marker {country} />
     {/each}
 
