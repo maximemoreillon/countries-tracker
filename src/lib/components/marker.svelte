@@ -22,15 +22,17 @@
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D
 
   const fontSize = 20
+  const text = `${country.Country}: ${country.count}`
+  const x = 0.5 * canvas.width
+  const y = 0.5 * canvas.height
   ctx.font = `${fontSize}px Arial`
-  ctx.fillStyle = "#ff0000"
   ctx.textAlign = "center"
   ctx.textBaseline = "middle"
-  ctx.fillText(
-    `${country.Country}: ${country.count}`,
-    0.5 * canvas.width,
-    0.5 * canvas.height
-  )
+  ctx.strokeStyle = "black"
+  ctx.lineWidth = 2
+  ctx.strokeText(text, x, y)
+  ctx.fillStyle = "#ff0000"
+  ctx.fillText(text, x, y)
 
   const texture = new Texture(canvas)
   texture.needsUpdate = true
@@ -55,6 +57,16 @@
   />
   <T.MeshStandardMaterial color="#ff0000" />
 </T.Mesh>
+
+<!-- <T.PointLight
+  intensity={0.1 * country.count}
+  color="#ff0000"
+  position={spherical2cartesian(
+    deg2Rag(country.Latitude),
+    -deg2Rag(country.Longitude),
+    earthRadius + 0.01
+  )}
+/> -->
 
 <T.Sprite
   args={[spriteMaterial]}
