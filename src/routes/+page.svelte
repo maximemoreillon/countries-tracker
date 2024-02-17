@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Fab, { Icon } from "@smui/fab"
+  import Fab, { Icon, Label } from "@smui/fab"
   import Dialog, { Content, Actions } from "@smui/dialog"
   import CircularProgress from "@smui/circular-progress"
 
@@ -113,6 +113,7 @@
     <Earth />
   </Canvas>
   <Fab
+    extended
     color="primary"
     class="register_button"
     on:click={() => {
@@ -120,6 +121,7 @@
     }}
   >
     <Icon class="material-icons">add</Icon>
+    <Label>Register your country</Label>
   </Fab>
   <Dialog bind:open={loading} scrimClickAction="" escapeKeyAction="">
     <Content style="display: flex; justify-content: center; padding: 2em;">
