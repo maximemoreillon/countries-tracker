@@ -37,6 +37,7 @@
     padding: 0.5em;
     display: flex;
     justify-content: center;
+    font-size: 80%;
   }
 
   footer a {
